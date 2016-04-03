@@ -1,0 +1,22 @@
+==> 2016-04-02 23:12:01 <==
+# cmd: C:\Users\parij\Anaconda2\Scripts\conda-script.py create -p c:\projects\incubator flask
+flask-0.10.1-py27_1
+itsdangerous-0.24-py27_0
+jinja2-2.8-py27_0
+markupsafe-0.23-py27_1
+pip-8.1.1-py27_1
+python-2.7.11-4
+setuptools-20.3-py27_0
+vs2008_runtime-9.00.30729.1-0
+werkzeug-0.11.5-py27_0
+wheel-0.29.0-py27_0
+# create specs: ['flask', 'python 2.7*']
+==> 2016-04-02 23:13:19 <==
+# cmd: C:\Users\parij\Anaconda2\Scripts\conda-script.py install nltk
++nltk-3.2-py27_0
+# install specs: ['nltk', 'python 2.7*']
+==> 2016-04-03 00:31:27 <==
+# cmd: C:\Users\parij\Anaconda2\Scripts\conda-script.py install numpy
++mkl-11.3.1-0
++numpy-1.11.0-py27_0
+# install specs: ['numpy', 'python 2.7*']

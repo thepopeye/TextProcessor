@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Index</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+    crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
+    crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+    crossorigin="anonymous"></script>
+</head>
+<style>
+    body {
+        background-color: #ffbf00;
+    }
+    
+    .btn-local {
+        border-radius: 0px;
+        border-width: 0px;
+        box-shadow: none;
+        background-color: rgba(180, 180, 180, 0.5);
+        color: #000;
+    }
+    
+    .btn-local:hover {
+        background-color: rgba(180, 180, 180, 0.85);
+    }
+</style>
+
+<body>
+    <div class="container-fluid">
+        <div class="row" style="height:60px; width:100%;">
+            <input id="searchbox" style="height:50px; width:50%; margin-top:10px; margin-left:25%; font-family:monospace; text-align:center; font-size:24px;"
+            class="pull-left" type="text" placeholder="Search by number(s)" />
+            <button type="button" class="btn btn-local btn-lg" style="margin-top:10px; height:50px; width:50px;">
+                <span id="searchbtn" class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            </button>
+        </div>
+        <div id="resultdiv" class="row" style="height:100%; width=60%; margin: 0 auto;">
+
+        </div>
+    </div>
+    <script>
+        $(function(){
+            var btn = document.getElementById('searchbtn');
+            btn.onclick = function(){
+                var tbox = document.getElementById('searchbox');
+                var str = tbox.value;
+                $.ajax({
+                    url: "/api/patent/" + str,
+                    }).done(function(data) {
+                        var resbox = document.getElementById('resultdiv');
+                        resbox.innerText = data;
+                    });
+            }
+        })
+    </script>
+</body>
+
+</html>
