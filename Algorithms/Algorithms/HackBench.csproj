@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Algorithms\DynProg.cs" />
     <Compile Include="Algorithms\StringMatch.cs" />
+    <Compile Include="DataStructures\AVLTree.cs" />
     <Compile Include="Mathematical\Methods.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -54,7 +55,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AI\" />
-    <Folder Include="DataStructures\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

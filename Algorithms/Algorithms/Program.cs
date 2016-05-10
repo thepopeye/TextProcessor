@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Algorithms.DataStructures;
 using HackBench.Algorithms;
 
 namespace HackBench
@@ -30,15 +31,24 @@ namespace HackBench
             //int len = DynProg.Instance.LongestIncreasingSubsequenceLength(A, n);
             ///int len = DynProg.Instance.LPSb("abefgba", 0, 6);
             ///
-            var intervals = new int[] { 0, 10, 22 };
-            var fees = new int[] { 1, 3, 1 };
-            var deliveries = new int[5][]
-            {
-                new int[] { 8, 15 }, new int[] { 12, 21}, new int[] { 15, 48},new int[] { 20, 17}, new int[] { 23, 43 }
-            };
-          
-            var str = DynProg.Instance.DeliveryFee(intervals,fees,deliveries);
-            Console.WriteLine(str);
+            // var intervals = new int[] { 0, 10, 22 };
+            //var fees = new int[] { 1, 3, 1 };
+            //var deliveries = new int[5][]
+            //{
+            //    new int[] { 8, 15 }, new int[] { 12, 21}, new int[] { 15, 48},new int[] { 20, 17}, new int[] { 23, 43 }
+            //};
+
+            //var str = DynProg.Instance.DeliveryFee(intervals,fees,deliveries);
+            var tree = new AVLTree();
+            tree.Insert(5);
+            tree.Insert(2);
+            tree.Insert(6);
+            tree.Insert(4);
+            tree.Insert(7);
+            tree.Insert(8);
+            tree.Insert(1);
+            tree.Print();
+            Console.WriteLine(tree.ToString());
             //int n = int.Parse(Console.ReadLine());
             //while (n > 0)
             //{
