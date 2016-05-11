@@ -12,7 +12,62 @@ namespace Algorithms.DataStructures
 
         public void Insert(int data)
         {
-            root = insert(root,data);
+            if (null == root) root = new Node(data);
+            else insertN(root, data);
+           // root = insert(root,data);
+        }
+
+        public void SearchAndBalance(Node node)
+        {
+            while(Math.Abs(node.Balance) < 2)
+            {
+                if (null == node.Parent) return;
+                node = node.Parent;
+            }
+            rr(node);
+        }
+
+        private void rr(Node node)
+        {
+            var p = node.Parent;
+            var c = node.Left;
+            node.Left = c.Right;
+            c.Right = node;
+            node.Parent = c;
+            c.Parent = p;
+            if (null != p)
+                p.Left = c;
+            else root = c;
+        }
+        
+        private void insertN(Node node, int data)
+        { 
+            if(data < node.Data)
+            {
+                if (null == node.Left)
+                {
+                    var c = new Node(data);
+                    node.Left = c;
+                    c.Parent = node;
+                    Console.WriteLine(this.ToString());
+                    SearchAndBalance(c);
+
+                }
+                else insertN(node.Left, data);
+            }
+            else
+            {
+                if (null == node.Right)
+                {
+                    var c = new Node(data);
+                    node.Right = c;
+                    c.Parent = node;
+                    Console.WriteLine(this.ToString());
+                    SearchAndBalance(c);
+                }
+                else insertN(node.Right, data);
+            }
+               
         }
 
         private Node insert(Node node, int data)
@@ -22,11 +77,13 @@ namespace Algorithms.DataStructures
             {
                 var child = insert(node.Left, data);
                 node.Left = child; child.Parent = node;
+                SearchAndBalance(child);
             }
             else if (data >= node.Data)
             {
                 var child = insert(node.Right, data);
                 node.Right = child; child.Parent = node;
+                SearchAndBalance(child);
             }
             return node;
         }
@@ -68,14 +125,14 @@ namespace Algorithms.DataStructures
                     lst[n.Left.Depth] += n.Left.Data + "*";
                     q.Push(n.Left);
                 }
-                else lst[n.Depth - 1] += "*";
+                //else lst[n.Depth - 1] += "*";
                 if (null != n.Right)
                 {
                     //for (int i = 0; i <= count; i++) lst[n.Right.Depth] += "\t";
                     lst[n.Right.Depth] += n.Right.Data + "*";
                     q.Push(n.Right);
                 }
-                else lst[n.Depth - 1] += "*";
+               // else lst[n.Depth - 1] += "*";
             }
             var srb = new StringBuilder();
             int max = (int)Math.Pow(2, root.Height + 1);
@@ -98,8 +155,16 @@ namespace Algorithms.DataStructures
 
     public class Node
     {
-        public Node Left { get; set; }
-        public Node Right { get; set; }
+        public Node Left
+        {
+            get;
+            set;
+        }
+        public Node Right
+        {
+            get;
+            set;
+        }
         public Node Parent { get; set; }
         public int Data { get; set; }
         public int Height
@@ -123,8 +188,8 @@ namespace Algorithms.DataStructures
         {
             get
             {
-                var lh = null == Left ? 0 : Left.Height;
-                var rh = null == Right ? 0 : Right.Height;
+                var lh = null == Left ? -1 : Left.Height;
+                var rh = null == Right ? -1 : Right.Height;
                 return rh - lh;
             }
         }
@@ -137,6 +202,11 @@ namespace Algorithms.DataStructures
         public Node(int data)
         {
             Data = data;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("(Value: {0}, (Left: {1}, Right: {2}))", new object[] { Data.ToString(), Left == null ? "null" : Left.ToString(), Right == null ? "null" : Right.ToString() });
         }
     }
 }
