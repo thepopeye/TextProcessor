@@ -13,33 +13,68 @@ namespace Algorithms.DataStructures
         public void Insert(int data)
         {
             if (null == root) root = new Node(data);
-            else insertN(root, data);
-           // root = insert(root,data);
+            //else insertN(root, data);
+            else root = insert(root,data);
         }
 
-        public void SearchAndBalance(Node node)
+        private Node balance(Node node)
         {
-            while(Math.Abs(node.Balance) < 2)
-            {
-                if (null == node.Parent) return;
-                node = node.Parent;
-            }
-            rr(node);
+            //while(Math.Abs(node.Balance) < 2)
+            //{
+            //    if (null == node.Parent) return;
+            //    node = node.Parent;
+            //}
+            if (node.Balance > 1 && node.Right.Balance > 0) RR(node);
+            else if (node.Balance > 1 && node.Right.Balance < 0) RL(node);
+            else if (node.Balance < -1 && node.Left.Balance < 0) LL(node);
+            else if (node.Balance < -1 && node.Left.Balance > 0) LR(node);
+            return node;
         }
 
-        private void rr(Node node)
+        //private void rr(Node node)
+        //{
+        //    var p = node.Parent;
+        //    var c = node.Left;
+        //    node.Left = c.Right;
+        //    c.Right = node;
+        //    node.Parent = c;
+        //    c.Parent = p;
+        //    if (null != p)
+        //        p.Left = c;
+        //    else root = c;
+        //}
+
+        private Node RR(Node node)
         {
-            var p = node.Parent;
-            var c = node.Left;
-            node.Left = c.Right;
-            c.Right = node;
-            node.Parent = c;
-            c.Parent = p;
-            if (null != p)
-                p.Left = c;
-            else root = c;
+            var pivot = node.Right;
+            node.Right = pivot.Left;
+            pivot.Left = node;
+            return pivot;
+        }
+
+        private Node LL(Node node)
+        {
+            var pivot = node.Left;
+            node.Left = pivot.Right;
+            pivot.Right = node;
+            return pivot;
+        }
+
+        private Node RL(Node node)
+        {
+            var nnode = node.Right;
+            node.Right = LL(nnode);
+            return RR(node);
+        }
+
+        private Node LR(Node node)
+        {
+            var nnode = node.Left;
+            node.Left = RR(nnode);
+            return LL(node);
         }
         
+
         private void insertN(Node node, int data)
         { 
             if(data < node.Data)
@@ -48,9 +83,9 @@ namespace Algorithms.DataStructures
                 {
                     var c = new Node(data);
                     node.Left = c;
-                    c.Parent = node;
-                    Console.WriteLine(this.ToString());
-                    SearchAndBalance(c);
+                   // c.Parent = node;
+                   // Console.WriteLine(this.ToString());
+                    balance(c);
 
                 }
                 else insertN(node.Left, data);
@@ -61,9 +96,9 @@ namespace Algorithms.DataStructures
                 {
                     var c = new Node(data);
                     node.Right = c;
-                    c.Parent = node;
-                    Console.WriteLine(this.ToString());
-                    SearchAndBalance(c);
+                    //c.Parent = node;
+                    //Console.WriteLine(this.ToString());
+                    balance(c);
                 }
                 else insertN(node.Right, data);
             }
@@ -75,15 +110,13 @@ namespace Algorithms.DataStructures
             if (null == node) node = new Node(data);
             else if (data < node.Data)
             {
-                var child = insert(node.Left, data);
-                node.Left = child; child.Parent = node;
-                SearchAndBalance(child);
+                node.Left = insert(node.Left, data);
+                node = balance(node);
             }
             else if (data >= node.Data)
             {
-                var child = insert(node.Right, data);
-                node.Right = child; child.Parent = node;
-                SearchAndBalance(child);
+                node.Right = insert(node.Right, data);
+               node = balance(node);
             }
             return node;
         }
@@ -101,9 +134,22 @@ namespace Algorithms.DataStructures
             print(node.Right, prefix + "|  ");
         }
 
+        private void inOrderPrint(Node node)
+        {
+            if (null == node) return;
+            inOrderPrint(node.Left);
+            Console.Write(node.Data + " ");
+            inOrderPrint(node.Right);
+        }
+
         public void Print()
         {
             print(root);
+        }
+
+        public void PrintInOrder()
+        {
+            inOrderPrint(root);
         }
 
         public override string ToString()

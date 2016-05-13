@@ -40,15 +40,17 @@ namespace HackBench
 
             //var str = DynProg.Instance.DeliveryFee(intervals,fees,deliveries);
             var tree = new AVLTree();
-            tree.Insert(5);
-            tree.Insert(2);
-            //tree.Insert(6);
-            //tree.Insert(4);
-            //tree.Insert(7);
-            //tree.Insert(8);
-            tree.Insert(1);
-            //tree.Print();
-            Console.WriteLine(tree.ToString());
+            var rand = new Random(1);
+            for(int i = 0; i < 15; i++)
+            {
+                var r = rand.Next(0, 100);
+                Console.WriteLine(r);
+                tree.Insert(r);
+                tree.PrintInOrder();
+                Console.WriteLine();
+            }
+            tree.Print();
+            //Console.WriteLine(tree.ToString());
             //int n = int.Parse(Console.ReadLine());
             //while (n > 0)
             //{
