@@ -76,7 +76,8 @@ namespace TextAnalysis
                     if (tmp.Count > 0)
                     {
                         var word = new String(tmp.ToArray()).ToLower();
-                        if (!stopwords.Contains(word))
+                        double d = 0;
+                        if (!stopwords.Contains(word) && word.Length > 2 &&!double.TryParse(word, out d))
                         {
                             //if (word.EndsWith("s") && null != graph.GetNode(word.TrimEnd('s')))
                             //    word = word.TrimEnd('s');
@@ -107,6 +108,7 @@ namespace TextAnalysis
         public Dictionary<string, double> GetKeyWords(string text, int count = 5)
         {
             var keywords = new Dictionary<string, double>();
+            graph = new TextGraph();
             buildTextGraph(text);
             var ordered = graph.OrderByDescending(a => a.Weight);
             int cnt = 0;
