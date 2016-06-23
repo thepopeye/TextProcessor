@@ -291,6 +291,25 @@ namespace TextAnalysis
             }
         }
 
+        public object GetGraphJSON()
+        {
+            visited = new HashSet<string>();
+            edgehash = new HashSet<string>();
+            var filter = new ExtractionFilter();
+            var nodes = new List<Node>();
+            var edges = new List<Edge>();
+            foreach (var node in _nodes)
+            {
+                traverse(node.ID, nodes, edges, filter);
+            }
+
+            var ret = new Dictionary<string, object>();
+            ret.Add("nodes", nodes);
+            ret.Add("edges", edges);
+
+            return ret;
+        }
+
         public object GetGraphJSON(IEnumerable<string> keys, IEnumerable<string> flags = null)
         {
             visited = new HashSet<string>();
@@ -379,6 +398,11 @@ namespace TextAnalysis
 
             private bool _ignoreDescendants = false;
 
+            public ExtractionFilter()
+            {
+                _keys = new HashSet<string>();
+            }
+
             public ExtractionFilter(IEnumerable<string> keys, IEnumerable<string> flags)
             {
                 _keys = new HashSet<string>(keys);
@@ -410,7 +434,6 @@ namespace TextAnalysis
             public bool ShouldTraverse(Node node)
             {
                 if (!_strict) return true;
-                if (node.Type != "covariate") return true;
                 if (_keys.Contains(node.ID))
                     return true;
                 else

@@ -1,0 +1,148 @@
+﻿
+<script src="~/scripts/jquery-1.11.3.min.js"></script>
+<script src="~/scripts/jquery-ui.min.js"></script>
+<script src="~/scripts/bootstrap.min.js"></script>
+<script src="~/scripts/moment.min.js"></script>
+<script src="~/scripts/spin.min.js"></script>
+<script src="~/scripts/daterangepicker.js"></script>
+<script src="~/scripts/bootstrap-datetimepicker.min.js"></script>
+<script src="~/scripts/vis.min.js"></script>
+<script src="~/scripts/uri.js"></script>
+<script src="~/scripts/selectize.min.js"></script>
+<script src="~/scripts/semantic.min.js"></script>
+<link href="~/content/font-awesome.min.css" rel="stylesheet" />
+<link href="~/content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<link href="~/content/daterangepicker.css" rel="stylesheet" />
+<link href="~/content/vis.min.css" rel="stylesheet" />
+<link href="~/content/semantic.min.css" rel="stylesheet" />
+<link href="~/content/selectize.default.css" rel="stylesheet" />
+<style>
+    input {
+        padding: 4px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        border-bottom: 2px solid #333;
+        font-family: monospace;
+        font-size: 16px;
+        color: #333;
+    }
+
+        textarea:hover,
+        input:hover,
+        textarea:active,
+        input:active,
+        textarea:focus,
+        input:focus,
+        button:focus,
+        button:active,
+        button:hover {
+            outline: 0px !important;
+            -webkit-appearance: none;
+        }
+
+    i.bordered.icon {
+        box-shadow: none;
+    }
+
+    i.link.icon {
+        opacity: 0.5;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row" style="height: 100px; padding-left:20px; padding-top:20px;">
+        
+        <input type="text" style="width: 400px; height:50px; margin-left:-10px;" class="pull-left" placeholder="Enter search terms" id="searchbox">
+        <button id="findbtn" class="circular ui icon button green" style="margin-left:25px;">
+            <i class="icon find"></i>
+        </button>
+        <script>
+            $('#searchbox').selectize({
+                delimiter: ',',
+                persist: false,
+                create: function (input) {
+                    return {
+                        value: input,
+                        text: input
+                    }
+                }
+            });
+        </script>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row" style="height: auto;">
+        <div class="col-md-4" id="listdiv" style=" padding-left 100px; height 100%; border-right:0px solid #eee">
+            <div class="ui card">
+                <div class="content">
+                    <i class="right floated like icon"></i>
+                    <i class="right floated star icon"></i>
+                    <div class="header">Cute Dog</div>
+                    <div class="description">
+                        <p></p>
+                    </div>
+                </div>
+                <div class="extra content">
+                    <span class="left floated like">
+                        <i class="like icon"></i>
+                        Like
+                    </span>
+                    <span class="right floated star">
+                        <i class="star icon"></i>
+                        Favorite
+                    </span>
+                </div>
+            </div>
+            <div class="ui card">
+                <div class="content">
+                    <i class="right floated like icon"></i>
+                    <i class="right floated star icon"></i>
+                    <div class="header">Cute Dog</div>
+                    <div class="description">
+                        <p></p>
+                    </div>
+                </div>
+                <div class="extra content">
+                    <span class="left floated like">
+                        <i class="like icon"></i>
+                        Like
+                    </span>
+                    <span class="right floated star">
+                        <i class="star icon"></i>
+                        Favorite
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8" id="graphdiv" style="height: 800px;">
+
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        var btn = document.getElementById('findbtn');
+        btn.onclick = function () {
+            $.ajax({
+                url: 'api/Graph',
+            })
+             .done(function (data) {
+                 var container = document.getElementById('graphdiv');
+                 var options = {
+                     edges: {
+                         arrows: {
+                             to: { enabled: true, scaleFactor: 1 },
+                             middle: { enabled: false, scaleFactor: 1 },
+                             from: { enabled: false, scaleFactor: 1 }
+                         }
+                     }
+                 };
+                 var network = new vis.Network(container, data, options);
+             });
+        };
+    });
+</script>

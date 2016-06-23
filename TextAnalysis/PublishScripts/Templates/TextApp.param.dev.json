@@ -1,0 +1,29 @@
+{
+  "siteName": {
+    "value": "nasapatents"
+  },
+  "hostingPlanName": {
+    "value": "Default1"
+  },
+  "siteLocation": {
+    "value": "South Central US"
+  },
+  "sku": {
+    "value": "Free"
+  },
+  "workerSize": {
+    "value": "0"
+  },
+  "siteMode": {
+    "value": "Limited"
+  },
+  "computeMode": {
+    "value": "0"
+  },
+  "subscriptionId": {
+    "value": "ebee4084-146e-4ada-a6ee-180b78f00e7b"
+  },
+  "resourceGroup": {
+    "value": "Default-Web-SouthCentralUS"
+  }
+}

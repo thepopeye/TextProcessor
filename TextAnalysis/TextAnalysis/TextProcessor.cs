@@ -81,7 +81,11 @@ namespace TextAnalysis
                         {
                             //if (word.EndsWith("s") && null != graph.GetNode(word.TrimEnd('s')))
                             //    word = word.TrimEnd('s');
-                            graph.AddNode(word, null);
+                            var node = new Node();
+                            node.ID = word;
+                            node.Name = word;
+                            node.Type = "word";
+                            graph.AddNode(node);
                             if (!freq.ContainsKey(word)) freq[word] = 1;
                             else freq[word] += 1;
                             wordcount++;
@@ -104,6 +108,28 @@ namespace TextAnalysis
                 freq[node.ID] = freq[node.ID] / wordcount;
             graph.UpdateWeights(freq);
         }
+
+        public object GetTextGraph(string text, int count = -1)
+        {
+            buildTextGraph(text);
+            if(count == -1)
+                return graph.GetGraphJSON();
+            else
+            {
+                var ordered = graph.OrderByDescending(a => a.Weight);
+                int cnt = 0;
+                var keys = new List<string>();
+                foreach (var node in ordered)
+                {
+                    keys.Add(node.ID);
+                    cnt++;
+                    if (cnt == count) break;
+                }
+                var ret = graph.GetGraphJSON(keys, new string[] { "strict" });
+                return ret;
+            }
+        }
+
         //TODO: Address singular/plural discrepancy
         public Dictionary<string, double> GetKeyWords(string text, int count = 5)
         {
@@ -173,7 +199,7 @@ namespace TextAnalysis
 
         private void loadStopwords()
         {
-            var lst = File.ReadAllLines("stopwords.txt");
+            var lst =  File.ReadAllLines(@"C:\Source\TextAnalysis\TextAnalysis\stopwords.txt");
             foreach (var line in lst)
                 stopwords.Add(line);
         }
