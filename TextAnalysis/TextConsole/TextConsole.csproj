@@ -55,6 +55,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\FileContoller\PatentDB.csproj">
+      <Project>{c0c2eba6-b3c0-4649-bc2f-e4e6f0c92c2d}</Project>
+      <Name>PatentDB</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TextAnalysis\TextAnalysis.csproj">
       <Project>{ecdc55f6-e1cf-4c16-96cf-e478fa093ef6}</Project>
       <Name>TextAnalysis</Name>

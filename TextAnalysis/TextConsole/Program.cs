@@ -7,7 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using TextAnalysis;
 using Newtonsoft.Json.Linq;
-
+using PatentDB;
+using System.Net;
 //0.custAge	1.profession	2.marital	3.schooling	4.default	5.housing	6.loan	7.contact	8.month	9.day_of_week	10.campaign	11.pdays	12.previous	13.poutcome	14.emp.var.rate	15.cons.price.idx	16.cons.conf.idx	17.euribor3m	18.nr.employed	19.pmonths	20.pastEmail	21.responded	22.profit	23.id
 
 
@@ -17,10 +18,13 @@ namespace TextConsole
     {
         static void Main(string[] args)
         {
-            var txt = File.ReadAllText(@"C:\etc\markov.txt");
-            var obj = TextProcessor.Instance.GetSummary(txt);
-            foreach(var o in obj)
-                Console.WriteLine(o);
+            //var txt = File.ReadAllText(@"C:\etc\markov.txt");
+            //var obj = TextProcessor.Instance.GetSummary(txt);
+            //foreach(var o in obj)
+            //    Console.WriteLine(o);
+            PatentDBController.Default.Initialize(@"C:\etc\patent\db");
+            var patent = PatentDBController.Default.Load(5585083);
+            //var str = CallRestMethod("https://s3.amazonaws.com/nasapatents/patents/patent_5585083");
             Console.ReadKey();
             //var lines = File.ReadAllLines(@"C:\etc\palindrome1.txt");
             //var srb = new StringBuilder();
@@ -256,6 +260,22 @@ namespace TextConsole
                     break;
             }
             return ret;
+        }
+
+        public static string CallRestMethod(string url)
+        {
+            HttpWebRequest webrequest = (HttpWebRequest)WebRequest.Create(url);
+            webrequest.Method = "GET";
+            //webrequest.ContentType = "application/x-www-form-urlencoded";
+            //webrequest.Headers.Add("Username", "xyz");
+            //webrequest.Headers.Add("Password", "abc");
+            HttpWebResponse webresponse = (HttpWebResponse)webrequest.GetResponse();
+            Encoding enc = System.Text.Encoding.GetEncoding("utf-8");
+            StreamReader responseStream = new StreamReader(webresponse.GetResponseStream(), enc);
+            string result = string.Empty;
+            result = responseStream.ReadToEnd();
+            webresponse.Close();
+            return result;
         }
     }
 }

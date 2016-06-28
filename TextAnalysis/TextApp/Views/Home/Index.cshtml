@@ -51,33 +51,45 @@
     i.link.icon {
         opacity: 0.5;
     }
+    .page-header{
+        margin: 0 auto;
+    }
 </style>
 
 <div class="container-fluid">
     <div class="row" style="height: 100px; padding-left:20px; padding-top:20px;">
-        
-        <input type="text" style="width: 400px; height:50px; margin-left:-10px;" class="pull-left" placeholder="Enter search terms" id="searchbox">
-        <button id="findbtn" class="circular ui icon button green" style="margin-left:25px;">
-            <i class="icon find"></i>
-        </button>
-        <script>
-            $('#searchbox').selectize({
-                delimiter: ',',
-                persist: false,
-                create: function (input) {
-                    return {
-                        value: input,
-                        text: input
+       
+        <div class="col-md-4">
+            <div class="page-header pull-left" >
+                <h2>Patent Examiner</h2>
+            </div>
+        </div>
+        <div class="col-md-8">
+            
+            <button id="findbtn" class="circular ui icon button green pull-right" style="margin-left:25px;">
+                <i class="icon find"></i>
+            </button>
+            <input type="text" style="width: 400px; height:50px; margin-left:-10px;" class="pull-right" placeholder="Enter search terms" id="searchbox">
+            <script>
+                $('#searchbox').selectize({
+                    delimiter: ',',
+                    persist: false,
+                    create: function (input) {
+                        return {
+                            value: input,
+                            text: input
+                        }
                     }
-                }
-            });
-        </script>
+                });
+
+            </script>
+        </div>
     </div>
 </div>
 <div class="container-fluid">
-    <div class="row" style="height: auto;">
-        <div class="col-md-4" id="listdiv" style=" padding-left 100px; height 100%; border-right:0px solid #eee">
-            <div class="ui card">
+    <div id="mainrow" class="row" style="height: auto;">
+        <div class="col-md-4" id="listdiv" style="padding-left: 100px; height: 100%; border-right:0px solid #eee; overflow:auto;">
+            @*<div class="ui card">
                 <div class="content">
                     <i class="right floated like icon"></i>
                     <i class="right floated star icon"></i>
@@ -116,33 +128,342 @@
                         Favorite
                     </span>
                 </div>
-            </div>
+            </div>*@
         </div>
-        <div class="col-md-8" id="graphdiv" style="height: 800px;">
+        <div class="col-md-8" id="graphdiv" style="height: 100%; overflow:auto;">
 
         </div>
     </div>
 </div>
 <script>
     $(function () {
+
+        function displayPatentHeaders(headerlist) {
+            $('#listdiv').empty();
+            var listdiv = document.getElementById('listdiv');
+            listdiv.style.paddingTop = '5px';
+            listdiv.style.paddingBottom = '5px';
+            for (var i = 0; i < headerlist.length; i++) {
+                var header = headerlist[i];
+                var div = document.createElement('div');
+                div.className += ' ui card';
+                div.style.width = "400px";
+                var cdiv = document.createElement('div');
+                cdiv.className += ' content';
+                var hdiv = document.createElement('div');
+                hdiv.className += ' header';
+                hdiv.style.fontSize = "16px";
+                hdiv.appendChild(document.createTextNode(header.Title));
+                cdiv.appendChild(hdiv);
+                var mdiv = document.createElement('div');
+                mdiv.className += ' meta';
+                mdiv.appendChild(document.createTextNode(header.Center));
+                cdiv.appendChild(mdiv);
+                for (var j = 0; j < header.Inventors.length; j++) {
+                    var idiv = document.createElement('div');
+                    idiv.className += ' meta';
+                    idiv.appendChild(document.createTextNode(header.Inventors[j]));
+                    cdiv.appendChild(idiv);
+                }
+                div.appendChild(cdiv);
+                var ecdiv = document.createElement('div');
+                ecdiv.className += ' extra content';
+                var graphbtn = document.createElement('button');
+                graphbtn.setAttribute("patentid", header.ID);
+                graphbtn.id = "graphbtn_" + header.ID;
+                graphbtn.className += ' ui icon button pull-right graphbtn';
+                graphbtn.innerHTML = '<i class="sitemap icon"></i>';
+                graphbtn.onclick = function () {
+                    displayTextGraph(this);
+                }
+                ecdiv.appendChild(graphbtn);
+                var sumbtn = document.createElement('button');
+                sumbtn.className += ' ui icon button pull-right';
+                sumbtn.setAttribute("patentid", header.ID);
+                sumbtn.id = "sumbtn_" + header.ID;
+                sumbtn.innerHTML = '<i class="tasks icon"></i>';
+                sumbtn.setAttribute("patentid", header.ID);
+                sumbtn.onclick = function () {
+                    displaySummary(this);
+                }
+                ecdiv.appendChild(sumbtn);
+                //var cardbtn = document.createElement('button');
+                //cardbtn.className += ' ui icon button pull-right';
+                //cardbtn.innerHTML = '<i class="file text icon"></i>';
+                //ecdiv.appendChild(cardbtn);
+                div.appendChild(ecdiv);
+                listdiv.appendChild(div);
+            }
+        }
+
+        function createGraphButton(id) {
+            var graphbtn = document.createElement('button');
+            graphbtn.setAttribute("patentid", id);
+            graphbtn.className += ' ui icon button pull-right';
+            graphbtn.innerHTML = '<i class="sitemap icon"></i>';
+            graphbtn.onclick = function () {
+                var pid = graphbtn.getAttribute('patentid');
+                displayTextGraph(pid);
+            };
+            return graphbtn;
+        }
+
+        function displaySummary(btn) {
+            $('#graphdiv').empty();
+            var id = btn.getAttribute('patentid');
+            $.ajax({
+                url: '/api/Graph/summary/?id=' + id,
+                //type: "GET",
+                //contentType: "application/json",
+                success: function (data) {
+                    var container = document.getElementById('graphdiv');
+
+                    var sumpanel = document.createElement('div');
+                    sumpanel.className += ' well well-lg';
+                    sumpanel.innerText = data['summary'];
+                    container.appendChild(sumpanel);
+                    var claimpanel = document.createElement('div');
+                    claimpanel.className += ' well well-lg';
+                    claimpanel.innerText = data['abstract'];
+                    container.appendChild(claimpanel);
+                }
+            });
+        }
+
+        function displayTextGraph(btn) {
+            var id = btn.getAttribute('patentid');
+            $.ajax({
+                url: '/api/Graph/textgraph/?id=' + id,
+                //type: "GET",
+                //contentType: "application/json",
+                success: function (data) {
+                    var container = document.getElementById('graphdiv');
+                    var options = {
+                        nodes: {
+                            scaling: {
+                                label: {
+                                    enabled: false,
+                                }
+                            },
+                            font: {
+                                color: '#000',
+                                size: 16, // px
+                                face: 'monospace',
+                                background: 'none',
+                                strokeWidth: 0, // px
+                                strokeColor: '#000'
+                            },
+                            icon: {
+                                face: 'FontAwesome',
+                                code: '\uf192',
+                                size: 30,  //50,
+                                //color: '#4B3621'
+                                // color: '#fff'
+                            },
+                            shape: 'icon',
+                        },
+                        edges: {
+                            arrows: {
+                                to: { enabled: true, scaleFactor: 1 },
+                                middle: { enabled: false, scaleFactor: 1 },
+                                from: { enabled: false, scaleFactor: 1 }
+                            }
+                        },
+                        layout: {
+                            randomSeed: undefined,
+                            improvedLayout: true,
+                            hierarchical: {
+                                enabled: false,
+                                levelSeparation: 100,
+                                nodeSpacing: 100,
+                                treeSpacing: 400,
+                                blockShifting: true,
+                                edgeMinimization: true,
+                                parentCentralization: true,
+                                direction: 'UD',        // UD, DU, LR, RL
+                                sortMethod: 'hubsize'   // hubsize, directed
+                            }
+                        },
+                        groups: {
+                            doc: {
+                                shape: 'icon',
+                                icon: {
+                                    face: 'FontAwesome',
+                                    code: '\uf15c',
+                                    size: 30,
+                                    //color: '#bcc6cc'
+                                    color: '#ff4500'
+                                }
+                            },
+                            inventor: {
+                                shape: 'icon',
+                                icon: {
+                                    face: 'FontAwesome',
+                                    code: '\uf0c0',
+                                    size: 30,
+                                    // color: '#bcc6cc'
+                                    color: '#2ecc71'
+                                }
+                            },
+                            keyword: {
+                                shape: 'icon',
+                                icon: {
+                                    face: 'FontAwesome',
+                                    code: '\uf02b',
+                                    size: 30,
+                                    //color: '#bcc6cc'
+                                    color: '#bdc3c7'
+                                }
+                            },
+                            year: {
+                                shape: 'icon',
+                                icon: {
+                                    face: 'FontAwesome',
+                                    code: '\uf017',
+                                    size: 30,
+                                    //color: '#bcc6cc'
+                                    color: '#c0392b'
+                                }
+                            },
+                        },
+                        physics: {
+                            enabled: true,
+                            barnesHut: {
+                                gravitationalConstant: -2000,
+                                centralGravity: 0.5,
+                                springLength: 200,
+                                springConstant: 0.1,
+                                damping: 0.2,
+                                avoidOverlap: 0
+                            },
+                        }
+                    };
+                    var network = new vis.Network(container, data, options);
+                }
+            });
+        }
+
+        var mainrow = document.getElementById('mainrow');
+        mainrow.style.height = (window.innerHeight - 100) + 'px';
         var btn = document.getElementById('findbtn');
         btn.onclick = function () {
+            var words = $('#searchbox').attr('value');
+            var param = words.split(',');
             $.ajax({
-                url: 'api/Graph',
-            })
-             .done(function (data) {
-                 var container = document.getElementById('graphdiv');
-                 var options = {
-                     edges: {
-                         arrows: {
-                             to: { enabled: true, scaleFactor: 1 },
-                             middle: { enabled: false, scaleFactor: 1 },
-                             from: { enabled: false, scaleFactor: 1 }
-                         }
-                     }
-                 };
-                 var network = new vis.Network(container, data, options);
-             });
+                url: '/api/Graph/keywordgraph/?id=' + param,
+                //type: "GET",
+                //contentType: "application/json",
+                success: function (data) {
+                    displayPatentHeaders(data['headers']);
+                    var container = document.getElementById('graphdiv');
+                    var options = {
+                        nodes: {
+                            scaling: {
+                                label: {
+                                    enabled: false,
+                                }
+                            },
+                            font: {
+                                color: '#000',
+                                size: 16, // px
+                                face: 'monospace',
+                                background: 'none',
+                                strokeWidth: 0, // px
+                                strokeColor: '#000'
+                            },
+                            icon: {
+                                face: 'FontAwesome',
+                                code: '\uf192',
+                                size: 30,  //50,
+                                //color: '#4B3621'
+                                // color: '#fff'
+                            },
+                            shape: 'icon',
+                        },
+                        edges: {
+                            arrows: {
+                                to: { enabled: true, scaleFactor: 1 },
+                                middle: { enabled: false, scaleFactor: 1 },
+                                from: { enabled: false, scaleFactor: 1 }
+                            }
+                        },
+                        layout: {
+                            randomSeed: undefined,
+                            improvedLayout: true,
+                            hierarchical: {
+                                enabled: false,
+                                levelSeparation: 100,
+                                nodeSpacing: 100,
+                                treeSpacing: 400,
+                                blockShifting: true,
+                                edgeMinimization: true,
+                                parentCentralization: true,
+                                direction: 'UD',        // UD, DU, LR, RL
+                                sortMethod: 'hubsize'   // hubsize, directed
+                            }
+                        },
+                        groups: {
+                            doc: {
+                                shape: 'icon',
+                                icon: {
+                                    face: 'FontAwesome',
+                                    code: '\uf15c',
+                                    size: 30,
+                                    //color: '#bcc6cc'
+                                    color: '#ff4500'
+                                }
+                            },
+                            inventor: {
+                                shape: 'icon',
+                                icon: {
+                                    face: 'FontAwesome',
+                                    code: '\uf0c0',
+                                    size: 30,
+                                    // color: '#bcc6cc'
+                                    color: '#2ecc71'
+                                }
+                            },
+                            keyword: {
+                                shape: 'icon',
+                                icon: {
+                                    face: 'FontAwesome',
+                                    code: '\uf02b',
+                                    size: 30,
+                                    //color: '#bcc6cc'
+                                    color: '#bdc3c7'
+                                }
+                            },
+                            year: {
+                                shape: 'icon',
+                                icon: {
+                                    face: 'FontAwesome',
+                                    code: '\uf017',
+                                    size: 30,
+                                    //color: '#bcc6cc'
+                                    color: '#c0392b'
+                                }
+                            },
+                        },
+                        physics: {
+                            enabled: true,
+                            barnesHut: {
+                                gravitationalConstant: -2000,
+                                centralGravity: 0.5,
+                                springLength: 200,
+                                springConstant: 0.1,
+                                damping: 0.2,
+                                avoidOverlap: 0
+                            },
+                        }
+                    };
+                    var network = new vis.Network(container, data, options);
+                 }
+            });
         };
+
+        //$('.graphbtn').click(function () {
+        //    var id = $(this).attr('patentid');
+        //    displayTextGraph(id);
+        //});
     });
 </script>

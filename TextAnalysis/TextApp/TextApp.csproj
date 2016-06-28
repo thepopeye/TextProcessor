@@ -78,7 +78,7 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -167,6 +167,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\stopwords.txt" />
     <Content Include="Content\bootcards-android.css" />
     <Content Include="Content\bootcards-android.min.css" />
     <Content Include="Content\bootcards-desktop.css" />
@@ -181,6 +182,8 @@
     <Content Include="Content\selectize.css" />
     <Content Include="Content\selectize.default.css" />
     <Content Include="Content\semantic.min.css" />
+    <Content Include="Content\themes\default\assets\fonts\icons.svg" />
+    <Content Include="Content\themes\default\assets\images\flags.png" />
     <Content Include="Content\vis.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
@@ -210,6 +213,13 @@
     <Content Include="fonts\icomoon.eot" />
     <Content Include="fonts\icomoon.ttf" />
     <Content Include="fonts\icomoon.woff" />
+    <Content Include="App_Data\headers.json" />
+    <Content Include="App_Data\revlookup.json" />
+    <Content Include="Content\themes\default\assets\fonts\icons.eot" />
+    <Content Include="Content\themes\default\assets\fonts\icons.otf" />
+    <Content Include="Content\themes\default\assets\fonts\icons.ttf" />
+    <Content Include="Content\themes\default\assets\fonts\icons.woff" />
+    <Content Include="Content\themes\default\assets\fonts\icons.woff2" />
     <None Include="Properties\PublishProfiles\nasapatents.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\daterangepicker.js" />
@@ -248,7 +258,6 @@
     <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
@@ -260,6 +269,10 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\FileContoller\PatentDB.csproj">
+      <Project>{c0c2eba6-b3c0-4649-bc2f-e4e6f0c92c2d}</Project>
+      <Name>PatentDB</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TextAnalysis\TextAnalysis.csproj">
       <Project>{ecdc55f6-e1cf-4c16-96cf-e478fa093ef6}</Project>
       <Name>TextAnalysis</Name>
