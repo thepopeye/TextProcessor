@@ -8,13 +8,27 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    
+    <!-- Google Tag Manager -->
+    <noscript>
+        <iframe src="//www.googletagmanager.com/ns.html?id=GTM-TD738L"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TD738L');</script>
+    <!-- End Google Tag Manager -->
     <div class="container-fluid">
         @RenderBody()
     </div>
 
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/bootstrap") 
     @RenderSection("scripts", required: false)
+    <footer style="width:100%;">
+        <div style="margin-top: 10px; width:auto; text-align:center; font-family:Calibri; font-size:14px;"><b>Patent Examiner</b>&copy; 2016 by <span><a href="https://www.linkedin.com/in/sinhaparijat">Parijat Sinha</a></span> and <span><a href="https://www.linkedin.com/in/martin-donnells-b0575347">Martin Donnels</a></span></div>
+    </footer>
 </body>
 </html>

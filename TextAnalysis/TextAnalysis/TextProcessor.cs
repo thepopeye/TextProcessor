@@ -201,7 +201,6 @@ namespace TextAnalysis
             int wordcount = 0;
             double weight = 0;
 
-
             while (i < text.Length)
             {
                 ret.Add(text[i]);

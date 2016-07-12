@@ -87,7 +87,7 @@
     </div>
 </div>
 <div class="container-fluid">
-    <div id="mainrow" class="row" style="height: auto;">
+    <div id="mainrow" class="row">
         <div class="col-md-4" id="listdiv" style="padding-left: 100px; height: 100%; border-right:0px solid #eee; overflow:auto;">
             @*<div class="ui card">
                 <div class="content">
@@ -137,7 +137,7 @@
 </div>
 <script>
     $(function () {
-
+       
         function displayPatentHeaders(headerlist) {
             $('#listdiv').empty();
             var listdiv = document.getElementById('listdiv');
@@ -344,7 +344,7 @@
         }
 
         var mainrow = document.getElementById('mainrow');
-        mainrow.style.height = (window.innerHeight - 100) + 'px';
+        mainrow.style.height = (window.innerHeight - 145) + 'px';
         var btn = document.getElementById('findbtn');
         btn.onclick = function () {
             var words = $('#searchbox').attr('value');
